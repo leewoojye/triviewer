@@ -23,7 +23,8 @@
         <li onclick="showSection('regional')"><i class="fas fa-map-marked-alt"></i> 지역 상품 기획</li>
         <li onclick="showSection('comm')"><i class="fas fa-comments"></i> 주제소통</li>
         <li onclick="showSection('theme')"><i class="fas fa-lightbulb"></i> 테마 상품 기획</li>
-        <li onclick="showSection('finalize')"><i class="fas fa-check-circle"></i> 투표 및 정보</li>
+        <li onclick="showSection('finalize')"><i class="fas fa-check-circle"></i> 나라별 데이터</li>
+        <li onclick="showSection('vote')"><i class="fas fa-vote-yea"></i> 투표</li>
       </ul>
       <div class="footer-info">
         <p>5조 프로젝트</p>
@@ -70,6 +71,26 @@
               <input id="comm-input" type="text" placeholder="메시지를 입력하세요...">
               <button onclick="sendCommMessage()">전송</button>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- NEW: Separate Vote page moved from finalize -->
+      <section id="vote" class="page">
+        <div class="vote-section">
+          <h3>상품 기획안 투표</h3>
+          <p>이번 [홍콩 3박 4일 - 지역/테마 융합 상품] 기획안을 승인하시겠습니까?</p>
+          <div class="vote-box" role="group" aria-label="기획안 찬반">
+            <div class="vote-choice" data-choice="yes" role="button" tabindex="0" onclick="vote('yes')">yes</div>
+            <div class="vote-choice" data-choice="no" role="button" tabindex="0" onclick="vote('no')">no</div>
+          </div>
+
+          <div id="vote-result" class="vote-result"></div>
+
+          <div class="proposal-row">
+            <label for="proposal-input" class="sr-only">제안</label>
+            <input id="proposal-input" type="text" placeholder="제안" />
+            <button id="proposal-send" onclick="submitProposal()">전송</button>
           </div>
         </div>
       </section>
@@ -196,31 +217,39 @@
 
       <section id="finalize" class="page">
         <h2>최종 기획안 검토</h2>
+        <!-- Country search: show country-specific data only after search -->
+        <div class="country-search-row">
+          <input id="country-search" type="text" placeholder="나라 검색 (예: 홍콩)" aria-label="나라 검색" />
+          <button id="country-search-btn">검색</button>
+        </div>
 
+        <div id="country-info-wrapper">
         <div class="info-dashboard">
-          <div class="info-card">
-            <h3><i class="fas fa-coins"></i> 환율 정보 (HKD/KRW)</h3>
+          <div class="info-card" id="exchange-card">
+            <h3><i class="fas fa-coins"></i> 환율 정보</h3>
             <div class="rate-display">
-              <div class="flag">🇭🇰 1 HKD</div>
+              <div class="flag" id="exchange-flag">🇭🇰 1 HKD</div>
               <div class="eq">=</div>
-              <div class="val">🇰🇷 189.09 KRW</div>
+              <div class="val" id="exchange-val">🇰🇷 189.09 KRW</div>
             </div>
           </div>
-          <div class="info-card">
-            <h3><i class="fas fa-cloud-sun"></i> 홍콩 주간 예보</h3>
-            <div class="weather-row">
-              <span>오늘</span> <i class="fas fa-sun" style="color:orange"></i> 17°/25°
-            </div>
-            <div class="weather-row">
-              <span>내일</span> <i class="fas fa-cloud-sun" style="color:gray"></i> 18°/28°
-            </div>
-            <div class="weather-row">
-              <span>모레</span> <i class="fas fa-cloud" style="color:skyblue"></i> 15°/26°
+          <div class="info-card" id="weather-card">
+            <h3><i class="fas fa-cloud-sun"></i> 주간 예보</h3>
+            <div id="weather-content">
+              <div class="weather-row">
+                <span>오늘</span> <i class="fas fa-sun" style="color:orange"></i> 17°/25°
+              </div>
+              <div class="weather-row">
+                <span>내일</span> <i class="fas fa-cloud-sun" style="color:gray"></i> 18°/28°
+              </div>
+              <div class="weather-row">
+                <span>모레</span> <i class="fas fa-cloud" style="color:skyblue"></i> 15°/26°
+              </div>
             </div>
           </div>
-          <div class="info-card">
+          <div class="info-card" id="visa-card">
             <h3><i class="fas fa-passport"></i> 비자 정보</h3>
-            <ul>
+            <ul id="visa-list">
               <li>대한민국 여권 소지자 90일 무비자</li>
               <li>여권 유효기간 6개월 이상 필수</li>
               <li>별도 도착 비자 불필요</li>
@@ -228,22 +257,7 @@
           </div>
         </div>
 
-        <div class="vote-section">
-          <h3>상품 기획안 투표</h3>
-          <p>이번 [홍콩 3박 4일 - 지역/테마 융합 상품] 기획안을 승인하시겠습니까?</p>
-          <!-- New UI: large side-by-side choice boxes like the provided mock -->
-          <div class="vote-box" role="group" aria-label="기획안 찬반">
-            <div class="vote-choice" data-choice="yes" role="button" tabindex="0" onclick="vote('yes')">yes</div>
-            <div class="vote-choice" data-choice="no" role="button" tabindex="0" onclick="vote('no')">no</div>
-          </div>
-
-          <div id="vote-result" class="vote-result"></div>
-
-          <!-- Proposal input below choices -->
-          <div class="proposal-row">
-            <label for="proposal-input" class="sr-only">제안</label>
-            <input id="proposal-input" type="text" placeholder="제안" />
-          </div>
+        <!-- vote-section moved to separate 'vote' page -->
         </div>
       </section>
 

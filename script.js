@@ -212,6 +212,7 @@ function createFeedCard(item) {
     });
 
     // input area
+
     const commentInputWrap = document.createElement('div');
     commentInputWrap.className = 'comment-input';
     const commentInput = document.createElement('input');
@@ -221,6 +222,7 @@ function createFeedCard(item) {
     commentSend.innerText = '전송';
     commentInputWrap.appendChild(commentInput);
     commentInputWrap.appendChild(commentSend);
+
 
     // handler to add comment
     function addComment(text) {
@@ -232,12 +234,19 @@ function createFeedCard(item) {
         commentList.scrollTop = commentList.scrollHeight;
     }
 
+    // Prevent duplicate final-character when using IME by tracking composition
+    let _commentIsComposing = false;
+    commentInput.addEventListener('compositionstart', function() { _commentIsComposing = true; });
+    commentInput.addEventListener('compositionend', function() { _commentIsComposing = false; });
+
     commentSend.addEventListener('click', function() {
         addComment(commentInput.value);
         commentInput.value = '';
         commentInput.focus();
     });
     commentInput.addEventListener('keydown', function(e) {
+        // ignore Enter while IME composition active
+        if (e.isComposing || _commentIsComposing) return;
         if (e.key === 'Enter') {
             e.preventDefault();
             addComment(commentInput.value);
@@ -666,3 +675,72 @@ function vote(choice) {
         resultDiv.innerHTML = "<h4 style='color:red;'>보류되었습니다.</h4><p>팀원들과 추가 논의가 필요합니다.</p>";
     }
 }
+
+/* Submit proposal text from vote page */
+function submitProposal() {
+    const input = document.getElementById('proposal-input');
+    const res = document.getElementById('vote-result');
+    if (!input || !res) return;
+    const text = input.value.trim();
+    if (!text) return;
+    // simple acknowledgement — could be extended to save proposals
+    res.innerHTML = `<p>제안이 전송되었습니다: "${escapeHtml(text)}"</p>`;
+    input.value = '';
+}
+
+function escapeHtml(str) {
+    return str.replace(/[&<>"']/g, function(s) {
+        return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"})[s];
+    });
+}
+
+/* === Country info search/display for finalize page === */
+function showCountryInfo(country) {
+    const wrapper = document.getElementById('country-info-wrapper');
+    if (!wrapper) return;
+    const q = (country || '').trim();
+    if (!q) return;
+    wrapper.style.display = 'block';
+
+    const key = q.toLowerCase();
+    // simple simulated dataset for demonstration
+    if (key.includes('홍콩') || key.includes('hong') || key === 'hk') {
+        document.getElementById('exchange-flag').innerText = '🇭🇰 1 HKD';
+        document.getElementById('exchange-val').innerText = '🇰🇷 189.09 KRW';
+        document.getElementById('weather-content').innerHTML = `
+            <div class="weather-row"><span>오늘</span> <i class="fas fa-sun" style="color:orange"></i> 17°/25°</div>
+            <div class="weather-row"><span>내일</span> <i class="fas fa-cloud-sun" style="color:gray"></i> 18°/28°</div>
+            <div class="weather-row"><span>모레</span> <i class="fas fa-cloud" style="color:skyblue"></i> 15°/26°</div>
+        `;
+        const visaList = document.getElementById('visa-list');
+        visaList.innerHTML = '';
+        ['대한민국 여권 소지자 90일 무비자', '여권은 입국일 기준 6개월 이상 유효해야함', '별도 도착비자 불필요'].forEach(t => {
+            const li = document.createElement('li'); li.innerText = t; visaList.appendChild(li);
+        });
+    } else {
+        // fallback: show basic no-data message
+        document.getElementById('exchange-flag').innerText = q;
+        document.getElementById('exchange-val').innerText = '데이터 없음';
+        document.getElementById('weather-content').innerHTML = '<p>해당 국가의 날씨 데이터가 없습니다.</p>';
+        const visaList = document.getElementById('visa-list');
+        visaList.innerHTML = '';
+        const li = document.createElement('li'); li.innerText = '해당 국가 정보가 없습니다.'; visaList.appendChild(li);
+    }
+}
+
+// wire up country search controls
+document.addEventListener('DOMContentLoaded', function() {
+    const btn = document.getElementById('country-search-btn');
+    const input = document.getElementById('country-search');
+    if (btn && input) {
+        btn.addEventListener('click', function() {
+            showCountryInfo(input.value);
+        });
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                showCountryInfo(input.value);
+            }
+        });
+    }
+});

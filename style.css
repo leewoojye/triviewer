@@ -727,6 +727,31 @@ body {
   border: 2px dashed var(--secondary-brown);
 }
 
+/* Country search row for finalize page */
+.country-search-row {
+  display: flex;
+  gap: 8px;
+  max-width: 520px;
+  margin: 8px 0 16px 0;
+}
+.country-search-row input[type="text"] {
+  flex: 1 1 auto;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.08);
+}
+.country-search-row button {
+  padding: 10px 14px;
+  background: var(--primary-brown);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Hide country info until a search is performed */
+#country-info-wrapper { display: none; }
+
 .vote-buttons button {
   padding: 10px 30px;
   margin: 10px;
@@ -784,6 +809,19 @@ body {
   background: #fff;
   font-size: 14px;
 }
+
+/* Proposal send button (placed next to input) */
+.proposal-row { display:flex; gap:8px; align-items:center; }
+.proposal-row input[type="text"] { flex:1 1 auto; }
+.proposal-row button {
+  padding: 10px 14px;
+  background: var(--primary-brown);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.proposal-row button:hover { transform: translateY(-2px); }
 
 /* screen-reader only label */
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
