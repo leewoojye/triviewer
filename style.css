@@ -568,6 +568,10 @@ body {
   max-height: 220px;
   border: 1px solid rgba(93,64,55,0.06);
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start; /* default left alignment for messages */
 }
 .chat-timestamp {
   text-align: center;
@@ -576,13 +580,14 @@ body {
   margin: 8px 0 14px 0;
 }
 .bubble {
-  display: inline-block;
+  display: block;
   max-width: 76%;
   padding: 12px 16px;
   margin: 8px 0;
   border-radius: 14px;
   position: relative;
   line-height: 1.4;
+  word-wrap: break-word;
 }
 .bubble.left {
   background: #f4efe6; /* light beige */
@@ -629,10 +634,14 @@ body {
   margin-left: auto;
 }
 .chat-input input {
-  padding: 10px 12px;
+  padding: 12px 14px;
   border: 1px solid rgba(93,64,55,0.12);
-  border-radius: 8px;
-  min-width: 260px;
+  border-radius: 12px;
+  min-width: 220px;
+  background: linear-gradient(180deg,#fffaf6 0%, #fff 100%);
+  color: var(--primary-brown);
+  box-shadow: 0 6px 14px rgba(93,64,55,0.06);
+  transition: box-shadow .18s ease, transform .08s ease, border-color .12s ease;
 }
 .chat-input button {
   background: var(--primary-brown);
@@ -642,6 +651,58 @@ body {
   border-radius: 8px;
   cursor: pointer;
 }
+
+/* Fancy inputs for theme page (brainstorm, random, AI) */
+#brainstorm-input,
+#random-input,
+#ai-keyword,
+.chat-input-box input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 999px;
+  background: linear-gradient(180deg,#fffaf6 0%, #fff 100%);
+  border: 1px solid rgba(93,64,55,0.12);
+  color: var(--primary-brown);
+  padding: 8px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 800;
+  box-shadow: 0 8px 18px rgba(93,64,55,0.06);
+  transition: transform .08s ease, box-shadow .12s ease, border-color .12s ease;
+}
+#brainstorm-input::placeholder,
+#random-input::placeholder,
+#ai-keyword::placeholder {
+  color: rgba(93,64,55,0.38);
+}
+#brainstorm-input:focus,
+#random-input:focus,
+#ai-keyword:focus,
+.chat-input-box input:focus {
+  outline: none;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 28px rgba(93,64,55,0.12);
+  border-color: var(--secondary-brown);
+}
+
+/* Buttons next to inputs */
+.chat-input button,
+.chat-input-box button,
+.ai-input button {
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-weight: 700;
+  box-shadow: 0 6px 12px rgba(93,64,55,0.08);
+}
+.chat-input button:hover,
+.chat-input-box button:hover,
+.ai-input button:hover {
+  transform: translateY(-2px);
+}
+
+/* small layout tweak for the brainstorm input area */
+.chat-input-box { display:flex; gap:10px; align-items:center; }
+.chat-input-box input { flex:1; }
 
 /* 4. 정보 및 투표 */
 .info-dashboard {
@@ -683,6 +744,49 @@ body {
 .no {
   background: #e74c3c;
 }
+
+/* New vote UI: large side-by-side boxes */
+.vote-box {
+  display: flex;
+  gap: 0;
+  width: 320px;
+  margin: 12px auto 6px auto;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background: #fff;
+}
+.vote-choice {
+  flex: 1 1 50%;
+  padding: 18px 10px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 700;
+  color: #222;
+  cursor: pointer;
+  user-select: none;
+  background: #faf9f7;
+  transition: background .12s ease, transform .08s ease;
+}
+.vote-choice + .vote-choice {
+  border-left: 1px solid rgba(0,0,0,0.06);
+}
+.vote-choice:hover { transform: translateY(-2px); background:#fffaf0; }
+.vote-choice.selected { background: var(--light-brown); color: var(--primary-brown); }
+
+/* Proposal input styling */
+.proposal-row { margin-top: 14px; text-align: left; max-width: 520px; margin-left: auto; margin-right: auto; }
+.proposal-row input[type="text"] {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: #fff;
+  font-size: 14px;
+}
+
+/* screen-reader only label */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
 /* 유틸리티 버튼 */
 button {
@@ -753,6 +857,12 @@ button {
   border: 1px dashed #cfd8dc;
   border-radius: 6px;
   background: #ffffff;
+  display: flex; /* stack messages vertically */
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  overflow-y: auto;
+  align-items: flex-start;
 }
 
 /* Typing area for 주제소통 */
@@ -819,4 +929,93 @@ button {
   grid-column: span 1;
   padding: 12px 10px;
   border-radius: 12px;
+}
+
+/* ===================================================================
+   Make 테마 상품 기획 typing fields/buttons match 주제소통 styles
+   These rules override the pill/strong styles previously applied to
+   the theme inputs so they match the `.comm-typing` appearance.
+   Placed after existing rules to ensure precedence.
+   =================================================================== */
+
+/* Inputs: use the same spacing, border and subtle background */
+#brainstorm-input,
+#random-input,
+#ai-keyword,
+.chat-input input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid rgba(93,64,55,0.12);
+  border-radius: 8px;
+  background: #fffaf6;
+  color: var(--primary-brown);
+  box-shadow: none; /* remove heavy shadow from pill style */
+  font-weight: 400;
+  min-width: 0; /* allow shrinking inside flexible containers */
+}
+
+/* Placeholder color alignment */
+#brainstorm-input::placeholder,
+#random-input::placeholder,
+#ai-keyword::placeholder {
+  color: rgba(93,64,55,0.38);
+}
+
+/* Buttons next to inputs: match comm-typing button */
+#brainstorm-input + button,
+#random-input + button,
+#ai-keyword + button,
+.chat-input button,
+.chat-input-box button,
+.ai-input button {
+  background: var(--primary-brown);
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: none; /* remove pill shadow */
+  font-weight: 700;
+}
+
+/* Button hover: small lift like comm-typing */
+.chat-input button:hover,
+.chat-input-box button:hover,
+.ai-input button:hover,
+#brainstorm-input + button:hover,
+#random-input + button:hover,
+#ai-keyword + button:hover {
+  transform: translateY(-2px);
+}
+
+/* ------------------------------------------------------------------
+   Theme-card specific: make typing fields expand to the card width
+   Ensures '일상 공유', '오늘의 랜덤 질문', 'AI 추천' inputs fill
+   the available horizontal space inside each `.theme-card` box.
+   ------------------------------------------------------------------ */
+.theme-card .chat-controls .chat-input,
+.theme-card .chat-controls .chat-input-box {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+}
+
+.theme-card .chat-input { margin-left: 0; }
+
+.theme-card .chat-input input,
+.theme-card .chat-input-box input,
+.theme-card #brainstorm-input,
+.theme-card #random-input,
+.theme-card #ai-keyword {
+  width: 100% !important;
+  min-width: 0; /* allow flex children to shrink properly */
+  flex: 1 1 auto;
+  border-radius: 8px; /* match comm-typing look */
+  box-shadow: none;
+}
+
+.theme-card .chat-input button,
+.theme-card .chat-input-box button {
+  flex: 0 0 auto; /* keep button natural size */
 }

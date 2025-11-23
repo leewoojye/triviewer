@@ -565,7 +565,14 @@ function sendRandomReply() {
 document.addEventListener('DOMContentLoaded', function() {
     const input = document.getElementById('random-input');
     if (input) {
+        // Handle IME composition to avoid duplicate-final-character on Enter
+        let _randomIsComposing = false;
+        input.addEventListener('compositionstart', function() { _randomIsComposing = true; });
+        input.addEventListener('compositionend', function() { _randomIsComposing = false; });
+
         input.addEventListener('keydown', function(e) {
+            // If IME composition is active, ignore Enter key here.
+            if (e.isComposing || _randomIsComposing) return;
             if (e.key === 'Enter') {
                 e.preventDefault();
                 sendRandomReply();
@@ -584,6 +591,12 @@ function sendCommMessage() {
     const text = input.value.trim();
     if (text === '') return;
 
+    // global debounce to avoid duplicate sends
+    if (!window._lastCommSentAt) window._lastCommSentAt = 0;
+    const now = Date.now();
+    if (now - window._lastCommSentAt < 200) return;
+    window._lastCommSentAt = now;
+
     // find active comm panel canvas
     const canvas = document.querySelector('.comm-panel.active .comm-canvas');
     if (!canvas) return;
@@ -601,9 +614,16 @@ function sendCommMessage() {
 document.addEventListener('DOMContentLoaded', function() {
     const commInput = document.getElementById('comm-input');
     if (commInput) {
+        // prevent IME/composition double-send and rapid double-calls
+        let lastSentAt = 0;
         commInput.addEventListener('keydown', function(e) {
+            // ignore during IME composition
+            if (e.isComposing) return;
             if (e.key === 'Enter') {
                 e.preventDefault();
+                const now = Date.now();
+                if (now - lastSentAt < 300) return; // debounce
+                lastSentAt = now;
                 sendCommMessage();
             }
         });
@@ -632,6 +652,14 @@ function getAIRecommendation() {
 /* === 8. 투표 기능 === */
 function vote(choice) {
     const resultDiv = document.getElementById('vote-result');
+
+    // highlight selected choice box
+    try {
+        document.querySelectorAll('.vote-choice').forEach(c => c.classList.remove('selected'));
+        const sel = document.querySelector(`.vote-choice[data-choice="${choice}"]`);
+        if (sel) sel.classList.add('selected');
+    } catch (e) {}
+
     if (choice === 'yes') {
         resultDiv.innerHTML = "<h4 style='color:green;'>승인되었습니다! 🎉</h4><p>기획안이 다음 단계로 넘어갑니다.</p>";
     } else {

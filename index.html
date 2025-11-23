@@ -139,15 +139,21 @@
         <div class="layout-grid-theme">
           <div class="theme-card">
             <h3>일상 공유 & 브레인스토밍</h3>
-            <div class="chat-keywords" id="keyword-container">
-              <span class="keyword">우산</span>
-              <span class="keyword">차수막</span>
-              <span class="keyword">스크린도어</span>
-              <span class="keyword">버스 알림 어플</span>
-            </div>
-            <div class="chat-input-box">
-              <input type="text" id="brainstorm-input" placeholder="키워드 입력...">
-              <button onclick="addKeyword()">추가</button>
+            <div class="chat-box">
+              <div id="keyword-container" class="chat-list">
+                <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                  <span class="keyword">우산</span>
+                  <span class="keyword">차수막</span>
+                  <span class="keyword">스크린도어</span>
+                  <span class="keyword">버스 알림 어플</span>
+                </div>
+              </div>
+              <div class="chat-controls">
+                <div class="chat-input">
+                  <input type="text" id="brainstorm-input" placeholder="키워드 입력...">
+                  <button onclick="addKeyword()">추가</button>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -159,7 +165,7 @@
               </div>
 
               <div class="chat-controls">
-                <button onclick="generateQuestion()" class="refresh-btn"><i class="fas fa-sync-alt"></i> 새 질문</button>
+                <button onclick="generateQuestion()" class="refresh-btn"><i class="fas fa-lightbulb"></i> 새 질문</button>
 
                 <div class="chat-input">
                   <input type="text" id="random-input" placeholder="답변을 입력하여 영감 얻기...">
@@ -171,12 +177,17 @@
 
           <div class="theme-card full-width">
             <h3>AI 액티비티/장소 추천</h3>
-            <div class="ai-box">
-              <div class="ai-input">
-                <input type="text" id="ai-keyword" placeholder="테마 키워드 입력 (예: 등산, 물, 힐링)">
-                <button onclick="getAIRecommendation()">AI 검색</button>
-              </div>
-              <div id="ai-result" class="ai-result">
+            <div class="chat-box">
+              <div class="ai-box">
+                <div class="chat-list" id="ai-result">
+                  <!-- AI result will be shown here -->
+                </div>
+                <div class="chat-controls">
+                  <div class="chat-input">
+                    <input type="text" id="ai-keyword" placeholder="테마 키워드 입력 (예: 등산, 물, 힐링)">
+                    <button onclick="getAIRecommendation()">AI 검색</button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -220,11 +231,19 @@
         <div class="vote-section">
           <h3>상품 기획안 투표</h3>
           <p>이번 [홍콩 3박 4일 - 지역/테마 융합 상품] 기획안을 승인하시겠습니까?</p>
-          <div class="vote-buttons">
-            <button onclick="vote('yes')" class="vote-btn yes">YES (승인)</button>
-            <button onclick="vote('no')" class="vote-btn no">NO (보류)</button>
+          <!-- New UI: large side-by-side choice boxes like the provided mock -->
+          <div class="vote-box" role="group" aria-label="기획안 찬반">
+            <div class="vote-choice" data-choice="yes" role="button" tabindex="0" onclick="vote('yes')">yes</div>
+            <div class="vote-choice" data-choice="no" role="button" tabindex="0" onclick="vote('no')">no</div>
           </div>
+
           <div id="vote-result" class="vote-result"></div>
+
+          <!-- Proposal input below choices -->
+          <div class="proposal-row">
+            <label for="proposal-input" class="sr-only">제안</label>
+            <input id="proposal-input" type="text" placeholder="제안" />
+          </div>
         </div>
       </section>
 
