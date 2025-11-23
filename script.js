@@ -97,7 +97,194 @@ for (let i = 1; i <= 31; i++) {
         cell.appendChild(event);
     }
 
+    // add click handler to open feed modal for the date
+    cell.style.cursor = 'pointer';
+    cell.dataset.date = i;
+    cell.addEventListener('click', function() {
+        openFeedModal(i);
+    });
+
     calendarGrid.appendChild(cell);
+}
+
+/* === Calendar date -> open feed modal logic === */
+function createFeedCard(item) {
+    const card = document.createElement('div');
+    card.className = 'feed-card';
+    // top: user info
+    const userInfo = document.createElement('div');
+    userInfo.className = 'user-info';
+    const avatar = document.createElement('div');
+    avatar.className = 'avatar';
+    avatar.style.background = item.avatarColor || '#d35400';
+    avatar.innerText = item.avatarText || '홍';
+    const span = document.createElement('span');
+    span.innerText = item.user || '팀원';
+    userInfo.appendChild(avatar);
+    userInfo.appendChild(span);
+
+    // main area: photo on left, meta on right
+    const mainArea = document.createElement('div');
+    mainArea.style.display = 'flex';
+    mainArea.style.gap = '12px';
+    mainArea.style.alignItems = 'flex-start';
+
+    const photo = document.createElement('div');
+    photo.className = 'feed-img-placeholder';
+    photo.style.minWidth = '360px';
+    photo.style.height = '180px';
+    photo.style.borderRadius = '12px';
+    photo.style.display = 'flex';
+    photo.style.justifyContent = 'center';
+    photo.style.alignItems = 'center';
+    photo.style.fontSize = '20px';
+    photo.innerHTML = item.imageLabel || '사진';
+
+    const meta = document.createElement('div');
+    meta.style.display = 'flex';
+    meta.style.flexDirection = 'column';
+    meta.style.gap = '10px';
+
+    const insertBtn = document.createElement('button');
+    insertBtn.innerText = '+삽입';
+    insertBtn.style.alignSelf = 'flex-end';
+    insertBtn.style.background = 'var(--secondary-brown)';
+    insertBtn.style.color = '#fff';
+    insertBtn.style.border = 'none';
+    insertBtn.style.padding = '8px 12px';
+    insertBtn.style.borderRadius = '8px';
+
+    const recLabel = document.createElement('div');
+    recLabel.style.fontWeight = '700';
+    recLabel.style.marginTop = '6px';
+    recLabel.innerText = '추천시간대';
+
+    const timePill = document.createElement('div');
+    timePill.style.display = 'inline-block';
+    timePill.style.padding = '6px 12px';
+    timePill.style.borderRadius = '20px';
+    timePill.style.background = '#fff3e0';
+    timePill.style.color = 'var(--primary-brown)';
+    timePill.style.border = '1px solid rgba(93,64,55,0.08)';
+    timePill.innerText = item.recommendTime || '오후 3시';
+
+    // tags chips
+    const tags = document.createElement('div');
+    tags.className = 'tags';
+    (item.tags || []).forEach(t => {
+        const s = document.createElement('span');
+        s.className = 'tag';
+        s.innerText = t;
+        tags.appendChild(s);
+    });
+
+    meta.appendChild(insertBtn);
+    meta.appendChild(recLabel);
+    meta.appendChild(timePill);
+    meta.appendChild(tags);
+
+    mainArea.appendChild(photo);
+    mainArea.appendChild(meta);
+
+    // actions row (like/comment)
+    const actions = document.createElement('div');
+    actions.className = 'actions';
+    const likeBtn = document.createElement('button');
+    likeBtn.onclick = function() { toggleHeart(this); };
+    likeBtn.innerHTML = '<i class="far fa-heart"></i>';
+    const comBtn = document.createElement('button');
+    comBtn.innerHTML = '<i class="far fa-comment"></i>';
+    actions.appendChild(likeBtn);
+    actions.appendChild(comBtn);
+
+    card.appendChild(userInfo);
+    card.appendChild(mainArea);
+    card.appendChild(actions);
+    // comments area
+    const commentList = document.createElement('div');
+    commentList.className = 'comment-list';
+    // sample existing comments (could be empty)
+    (item.comments || []).forEach(c => {
+        const ci = document.createElement('div');
+        ci.className = 'comment-item';
+        ci.innerHTML = `<div class="c-avatar"></div><div class="c-body">${c}</div>`;
+        commentList.appendChild(ci);
+    });
+
+    // input area
+    const commentInputWrap = document.createElement('div');
+    commentInputWrap.className = 'comment-input';
+    const commentInput = document.createElement('input');
+    commentInput.type = 'text';
+    commentInput.placeholder = '의견달기';
+    const commentSend = document.createElement('button');
+    commentSend.innerText = '전송';
+    commentInputWrap.appendChild(commentInput);
+    commentInputWrap.appendChild(commentSend);
+
+    // handler to add comment
+    function addComment(text) {
+        if (!text || !text.trim()) return;
+        const ci = document.createElement('div');
+        ci.className = 'comment-item';
+        ci.innerHTML = `<div class="c-avatar"></div><div class="c-body">${text}</div>`;
+        commentList.appendChild(ci);
+        commentList.scrollTop = commentList.scrollHeight;
+    }
+
+    commentSend.addEventListener('click', function() {
+        addComment(commentInput.value);
+        commentInput.value = '';
+        commentInput.focus();
+    });
+    commentInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            addComment(commentInput.value);
+            commentInput.value = '';
+        }
+    });
+
+    card.appendChild(commentList);
+    card.appendChild(commentInputWrap);
+    return card;
+}
+
+function renderFeedCardsForDate(date) {
+    // For now, create sample items. In real app, fetch data for the date.
+    const items = [
+        { avatarText: '홍', user: '지역 상품 기획팀 홍길동', imageLabel: '답사 사진 (황대선사)', tags: ['#추천시간대_오후3시', '#힐링', '#등산'], avatarColor: '#d35400' },
+        { avatarText: '김', user: '지역 팀 김철수', imageLabel: '현장 스냅 (구룡공원)', tags: ['#포토스팟', '#가벼운산책'], avatarColor: '#6a1b9a' }
+    ];
+    return items.map(i => createFeedCard(i));
+}
+
+function openFeedModal(date) {
+    const modal = document.getElementById('feed-modal');
+    const body = document.getElementById('feed-modal-body');
+    const title = document.getElementById('feed-modal-title');
+    if (!modal || !body || !title) return;
+
+    // clear
+    body.innerHTML = '';
+    title.innerText = `${date}일 현장 답사 기록`;
+
+    const cards = renderFeedCardsForDate(date);
+    cards.forEach(c => body.appendChild(c));
+
+    modal.style.display = 'flex';
+
+    // close handlers
+    const closeBtn = document.getElementById('feed-modal-close');
+    if (closeBtn) closeBtn.onclick = closeFeedModal;
+    modal.onclick = function(e) {
+        if (e.target === modal) closeFeedModal();
+    };
+}
+
+function closeFeedModal() {
+    const modal = document.getElementById('feed-modal');
+    if (modal) modal.style.display = 'none';
 }
 
 /* === 3. 여행 기록 좋아요 기능 === */
@@ -170,14 +357,110 @@ const questions = [
     "스트레스를 푸는 나만의 방법은?",
     "팀원들에게 추천하고 싶은 영화는?"
 ];
+function formatTimestamp(date) {
+    try {
+        const opts = { month: 'numeric', day: 'numeric', weekday: 'short', hour: 'numeric', minute: 'numeric', hour12: true };
+        // e.g. "11월 23일 (일) 오전 10:55"
+        const parts = new Intl.DateTimeFormat('ko-KR', opts).formatToParts(date);
+        const month = parts.find(p => p.type === 'month').value;
+        const day = parts.find(p => p.type === 'day').value;
+        const weekday = parts.find(p => p.type === 'weekday').value;
+        const dayPeriod = parts.find(p => p.type === 'dayPeriod').value;
+        const hour = parts.find(p => p.type === 'hour').value;
+        const minute = parts.find(p => p.type === 'minute').value.padStart(2, '0');
+        return `${month}월 ${day}일 (${weekday}) ${dayPeriod} ${hour}:${minute}`;
+    } catch (e) {
+        return date.toLocaleString('ko-KR');
+    }
+}
+
+function addRandomMessage(role, text) {
+    const list = document.getElementById('random-chat');
+    if (!list) return;
+
+    if (role === 'q') {
+        const ts = document.createElement('div');
+        ts.className = 'chat-timestamp';
+        ts.innerText = formatTimestamp(new Date());
+        list.appendChild(ts);
+
+        const msg = document.createElement('div');
+        msg.className = 'bubble left';
+        msg.innerText = text;
+        list.appendChild(msg);
+    } else {
+        const msg = document.createElement('div');
+        msg.className = 'bubble right';
+        msg.innerText = text;
+        list.appendChild(msg);
+    }
+
+    // scroll to bottom
+    list.scrollTop = list.scrollHeight;
+}
 
 function generateQuestion() {
-    const display = document.getElementById('random-q');
     const randomIdx = Math.floor(Math.random() * questions.length);
-    display.innerText = questions[randomIdx];
+    addRandomMessage('q', questions[randomIdx]);
 }
-// 초기 실행
-generateQuestion();
+
+function sendRandomReply() {
+    const input = document.getElementById('random-input');
+    if (!input) return;
+    const text = input.value.trim();
+    if (text === '') return;
+    addRandomMessage('a', text);
+    input.value = '';
+}
+
+// attach Enter key handler for the input
+document.addEventListener('DOMContentLoaded', function() {
+    const input = document.getElementById('random-input');
+    if (input) {
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                sendRandomReply();
+            }
+        });
+    }
+
+    // initial sample question
+    generateQuestion();
+});
+
+/* === 10. 주제소통 입력 처리: comm typing field === */
+function sendCommMessage() {
+    const input = document.getElementById('comm-input');
+    if (!input) return;
+    const text = input.value.trim();
+    if (text === '') return;
+
+    // find active comm panel canvas
+    const canvas = document.querySelector('.comm-panel.active .comm-canvas');
+    if (!canvas) return;
+
+    const msg = document.createElement('div');
+    msg.className = 'bubble right';
+    msg.innerText = text;
+    canvas.appendChild(msg);
+    canvas.scrollTop = canvas.scrollHeight;
+    input.value = '';
+    input.focus();
+}
+
+// Enter key support for comm input
+document.addEventListener('DOMContentLoaded', function() {
+    const commInput = document.getElementById('comm-input');
+    if (commInput) {
+        commInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                sendCommMessage();
+            }
+        });
+    }
+});
 
 /* === 7. 테마 기획: AI 추천 시뮬레이션 === */
 function getAIRecommendation() {

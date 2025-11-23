@@ -64,28 +64,10 @@
               </div>
             </div>
 
-            <div class="keyboard-mock">
-              <div class="keys-grid">
-                <div class="key">ㄱㄱ</div>
-                <div class="key">ㅣ—</div>
-                <div class="key">ㅏㅅ</div>
-                <div class="key key-gray">⌫</div>
-
-                <div class="key">ㄷㅔ</div>
-                <div class="key">ㄴㄹ</div>
-                <div class="key">ㄱㅕ</div>
-                <div class="key key-gray">Enter</div>
-
-                <div class="key">ㅁㅅ</div>
-                <div class="key">ㅂㅍ</div>
-                <div class="key">ㅅㅛ</div>
-                <div class="key key-gray">,</div>
-
-                <div class="key">ㅈㅊ</div>
-                <div class="key">ㅇㅎ</div>
-                <div class="key">ㅌㅜ</div>
-                <div class="key key-gray">!#1</div>
-              </div>
+            <!-- Typing area: replace decorative keyboard with an input for user messages -->
+            <div class="comm-typing">
+              <input id="comm-input" type="text" placeholder="메시지를 입력하세요...">
+              <button onclick="sendCommMessage()">전송</button>
             </div>
           </div>
         </div>
@@ -114,41 +96,19 @@
       <section id="regional" class="page">
         <div class="tab-header">
           <button onclick="switchSubTab('cal-tab')" class="sub-tab-btn active">출장 캘린더</button>
-          <button onclick="switchSubTab('record-tab')" class="sub-tab-btn">여행 기록</button>
           <button onclick="switchSubTab('route-tab')" class="sub-tab-btn">동선 최적화</button>
         </div>
 
+        <!-- Merge calendar + travel-record into a single tab (출장 캘린더) -->
         <div id="cal-tab" class="sub-content active">
           <h3><i class="far fa-calendar-alt"></i> 2026년 1월 출장 일정</h3>
-          <div class="calendar-grid" id="calendar">
-          </div>
-        </div>
-
-        <div id="record-tab" class="sub-content">
-          <h3><i class="fas fa-camera"></i> 팀원 현장 답사 기록</h3>
-          <div class="feed-container">
-            <div class="feed-card">
-              <div class="user-info">
-                <div class="avatar" style="background: #d35400;">홍</div>
-                <span>지역 상품 기획팀 홍길동</span>
-              </div>
-              <div class="feed-img-placeholder">
-                <i class="fas fa-mountain"></i><br>답사 사진 (황대선사)
-              </div>
-              <div class="tags">
-                <span class="tag">#추천시간대_오후3시</span>
-                <span class="tag">#힐링</span>
-                <span class="tag">#등산</span>
-              </div>
-              <div class="actions">
-                <button onclick="toggleHeart(this)"><i class="far fa-heart"></i></button>
-                <button><i class="far fa-comment"></i></button>
+          <div class="cal-and-feed">
+            <div class="cal-side">
+              <div class="calendar-grid" id="calendar">
               </div>
             </div>
-          </div>
-          <div class="input-area">
-            <input type="text" placeholder="새로운 기록이나 의견을 남기세요...">
-            <button>등록</button>
+
+            <!-- feed removed from calendar side; use modal popup on date click -->
           </div>
         </div>
 
@@ -206,12 +166,19 @@
 
           <div class="theme-card">
             <h3>오늘의 랜덤 질문</h3>
-            <div class="question-box">
-              <p id="random-q">질문을 생성해보세요!</p>
-              <button onclick="generateQuestion()" class="refresh-btn"><i class="fas fa-sync-alt"></i> 새 질문</button>
-            </div>
-            <div class="answer-area">
-              <input type="text" placeholder="답변을 입력하여 영감 얻기...">
+            <div class="chat-box">
+              <div id="random-chat" class="chat-list">
+                <!-- chat messages will be appended here -->
+              </div>
+
+              <div class="chat-controls">
+                <button onclick="generateQuestion()" class="refresh-btn"><i class="fas fa-sync-alt"></i> 새 질문</button>
+
+                <div class="chat-input">
+                  <input type="text" id="random-input" placeholder="답변을 입력하여 영감 얻기...">
+                  <button onclick="sendRandomReply()">전송</button>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -278,6 +245,16 @@
   </div>
 
   <script src="script.js"></script>
+  <!-- Feed modal (opens when a calendar date is clicked) -->
+  <div id="feed-modal" class="modal-overlay" style="display:none;">
+    <div class="modal-content">
+      <button id="feed-modal-close" class="modal-close">✕</button>
+      <h3 id="feed-modal-title">현장 답사 기록</h3>
+      <div id="feed-modal-body" class="feed-modal-body">
+        <!-- feed cards will be injected here -->
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>
