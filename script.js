@@ -301,39 +301,79 @@ function toggleHeart(btn) {
     }
 }
 
-/* === 4. 동선 최적화 로직 === */
-let currentRoute = [];
-let totalMinutes = 0;
+/* === 4. 동선 최적화 로직 (replaced) === */
+// The old place-list / optimizer has been removed per request.
+// Below are functions to generate a day-by-day planner inside the '동선 최적화' tab.
 
-function addToRoute(name, time, cost, rating) {
-    // 배열에 추가
-    currentRoute.push({ name, time });
-    totalMinutes += time;
+function createRoutePlanner(days) {
+    const planner = document.getElementById('route-day-planner');
+    const columns = document.getElementById('route-day-columns');
+    columns.innerHTML = '';
 
-    renderRoute();
-}
+    for (let d = 1; d <= days; d++) {
+        const col = document.createElement('div');
+        col.className = 'day-column';
 
-function renderRoute() {
-    const list = document.getElementById('planned-route');
-    const timeDisplay = document.getElementById('total-time');
-    
-    list.innerHTML = '';
-    
-    if (currentRoute.length === 0) {
-        list.innerHTML = '<li class="empty-msg">장소를 클릭하여 추가하세요.</li>';
-        timeDisplay.innerText = '0';
-        return;
+        const tab = document.createElement('div');
+        tab.className = 'day-tab';
+        tab.innerText = `${d}일차`;
+
+        const panel = document.createElement('div');
+        panel.className = 'day-panel';
+
+        // placeholder cards inside panel
+        for (let k = 0; k < 3; k++) {
+            const pc = document.createElement('div');
+            pc.className = 'placeholder-card';
+            pc.innerText = '게시물 드래그 앤 드롭';
+            panel.appendChild(pc);
+        }
+
+        const hint = document.createElement('div');
+        hint.className = 'drop-hint';
+        hint.innerText = '여기에 게시물을 드래그하여 추가하세요.';
+        panel.appendChild(hint);
+
+        col.appendChild(tab);
+        col.appendChild(panel);
+        columns.appendChild(col);
     }
 
-    currentRoute.forEach((item, index) => {
-        const li = document.createElement('li');
-        li.className = 'route-item';
-        li.innerHTML = `<span>${index + 1}. ${item.name}</span> <small>${item.time}분</small>`;
-        list.appendChild(li);
-    });
-
-    timeDisplay.innerText = totalMinutes;
+    planner.style.display = 'block';
+    const placeholder = document.getElementById('route-placeholder');
+    if (placeholder) placeholder.style.display = 'none';
+    const resetBtn = document.getElementById('route-trip-reset');
+    if (resetBtn) resetBtn.style.display = 'inline-block';
 }
+
+function resetRoutePlanner() {
+    const planner = document.getElementById('route-day-planner');
+    planner.style.display = 'none';
+    const placeholder = document.getElementById('route-placeholder');
+    if (placeholder) placeholder.style.display = 'block';
+    const resetBtn = document.getElementById('route-trip-reset');
+    if (resetBtn) resetBtn.style.display = 'none';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const next = document.getElementById('route-trip-next');
+    const reset = document.getElementById('route-trip-reset');
+    if (next) {
+        next.addEventListener('click', function() {
+            const daysInput = document.getElementById('route-trip-days');
+            if (!daysInput) return;
+            let days = parseInt(daysInput.value, 10) || 1;
+            if (days < 1) days = 1;
+            if (days > 14) days = 14;
+            createRoutePlanner(days);
+        });
+    }
+    if (reset) {
+        reset.addEventListener('click', function() {
+            resetRoutePlanner();
+        });
+    }
+});
 
 /* === 5. 테마 기획: 브레인스토밍 === */
 function addKeyword() {

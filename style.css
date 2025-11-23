@@ -39,6 +39,46 @@ body {
   border: 5px solid var(--primary-brown);
 }
 
+/* Styled day tab and inner panel to match mockup */
+.day-column {
+  position: relative;
+  padding: 0; /* panel will have its own padding */
+  min-width: 200px;
+}
+.day-tab {
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  background: #ffd8c2;
+  padding: 6px 10px;
+  border-radius: 8px 8px 0 0;
+  font-weight: 700;
+  box-shadow: inset 0 -2px 0 rgba(0,0,0,0.04);
+  z-index: 2;
+}
+.day-panel {
+  background: #f6cdb6;
+  margin-top: 20px;
+  margin-left: 6px;
+  margin-right: 6px;
+  border-radius: 6px;
+  padding: 18px;
+  min-height: 420px;
+  box-shadow: inset 0 0 0 2px rgba(93,64,55,0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.day-panel .placeholder-card {
+  background: rgba(255,255,255,0.9);
+  border: 1px solid rgba(93,64,55,0.08);
+  padding: 18px;
+  border-radius: 12px;
+  text-align: center;
+  color: #333;
+}
+.day-columns { display:flex; align-items: stretch; }
+
 /* 사이드바 */
 .sidebar {
   width: 220px;
