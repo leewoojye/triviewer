@@ -319,6 +319,15 @@ body {
   gap: 20px;
 }
 
+/* Map container for route/tour planning */
+.route-map {
+  width: 100%;
+  height: 320px;
+  border: 1px solid var(--light-brown);
+  border-radius: 8px;
+  background: #fff;
+}
+
 /* calendar + feed combined layout */
 .cal-and-feed {
   display: flex;
@@ -555,7 +564,8 @@ body {
   background: #fff;
   border-radius: 12px;
   padding: 18px;
-  min-height: 220px;
+  height: 220px; /* fixed height so the outer card doesn't expand */
+  max-height: 220px;
   border: 1px solid rgba(93,64,55,0.06);
   overflow-y: auto;
 }

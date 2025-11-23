@@ -341,6 +341,19 @@ function createRoutePlanner(days) {
     if (placeholder) placeholder.style.display = 'none';
     const resetBtn = document.getElementById('route-trip-reset');
     if (resetBtn) resetBtn.style.display = 'inline-block';
+    // show map and initialize (or refresh) it when planner is created
+    const mapEl = document.getElementById('route-map');
+    if (mapEl) {
+        mapEl.style.display = 'block';
+        try {
+            initRouteMap();
+            if (mapEl._leaflet_initialized && mapEl._leaflet_map) {
+                setTimeout(() => {
+                    try { mapEl._leaflet_map.invalidateSize(); } catch (e) {}
+                }, 200);
+            }
+        } catch (e) {}
+    }
 }
 
 /* === Add-Post Modal: open/close and content population === */
@@ -426,6 +439,29 @@ function resetRoutePlanner() {
     const resetBtn = document.getElementById('route-trip-reset');
     if (resetBtn) resetBtn.style.display = 'none';
 }
+
+/* === Map initialization for route/투어 일정 === */
+function initRouteMap() {
+    const mapEl = document.getElementById('route-map');
+    if (!mapEl) return;
+    if (mapEl._leaflet_initialized) return;
+    if (typeof L === 'undefined') return; // Leaflet not loaded
+
+    // initialize centered on Korea
+    const map = L.map('route-map').setView([36.5, 127.8], 7);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // example marker (Seoul)
+    L.marker([37.5665, 126.9780]).addTo(map).bindPopup('서울 중심').openPopup();
+
+    mapEl._leaflet_initialized = true;
+    mapEl._leaflet_map = map;
+}
+
+// map initialization will occur when planner is created (on '다음')
 
 document.addEventListener('DOMContentLoaded', function() {
     const next = document.getElementById('route-trip-next');
