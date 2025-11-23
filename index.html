@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TRIVIER - 여행사를 위한 협업툴</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+  <div class="app-container">
+    <nav class="sidebar">
+      <div class="logo">
+        <h2>TRIVIER</h2>
+        <p>Collaborative Tool</p>
+      </div>
+      <ul class="menu">
+        <li onclick="showSection('home')" class="active"><i class="fas fa-home"></i> 홈</li>
+        <li onclick="showSection('regional')"><i class="fas fa-map-marked-alt"></i> 지역 상품 기획</li>
+        <li onclick="showSection('comm')"><i class="fas fa-comments"></i> 주제소통</li>
+        <li onclick="showSection('theme')"><i class="fas fa-lightbulb"></i> 테마 상품 기획</li>
+        <li onclick="showSection('finalize')"><i class="fas fa-check-circle"></i> 투표 및 정보</li>
+      </ul>
+      <div class="footer-info">
+        <p>5조 프로젝트</p>
+      </div>
+    </nav>
+
+    <main class="content">
+
+      <!-- Communication section: 주제소통 / 일상소통 -->
+      <section id="comm" class="page">
+        <div class="comm-header">
+          <div class="comm-tabs">
+            <button class="comm-tab-btn active" onclick="switchCommTab('topic')">주제소통</button>
+            <button class="comm-tab-btn" onclick="switchCommTab('daily')">일상소통</button>
+          </div>
+        </div>
+
+        <div class="comm-body">
+          <div class="comm-top-row">
+            <div class="comm-chips">
+              <span class="chip">우산</span>
+              <span class="chip">차수막</span>
+              <span class="chip">스크린도어</span>
+              <span class="chip">버스 알림 어플</span>
+              <span class="chip">청소기</span>
+            </div>
+            <div class="comm-more">더보기</div>
+          </div>
+
+          <div class="comm-content">
+            <div id="comm-topic" class="comm-panel active">
+              <div class="comm-canvas">
+                <!-- large empty canvas area -->
+              </div>
+            </div>
+            <div id="comm-daily" class="comm-panel">
+              <div class="comm-canvas">
+                <!-- daily chat placeholder -->
+              </div>
+            </div>
+
+            <div class="keyboard-mock">
+              <div class="keys-grid">
+                <div class="key">ㄱㄱ</div>
+                <div class="key">ㅣ—</div>
+                <div class="key">ㅏㅅ</div>
+                <div class="key key-gray">⌫</div>
+
+                <div class="key">ㄷㅔ</div>
+                <div class="key">ㄴㄹ</div>
+                <div class="key">ㄱㅕ</div>
+                <div class="key key-gray">Enter</div>
+
+                <div class="key">ㅁㅅ</div>
+                <div class="key">ㅂㅍ</div>
+                <div class="key">ㅅㅛ</div>
+                <div class="key key-gray">,</div>
+
+                <div class="key">ㅈㅊ</div>
+                <div class="key">ㅇㅎ</div>
+                <div class="key">ㅌㅜ</div>
+                <div class="key key-gray">!#1</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="home" class="page active">
+        <div class="hero">
+          <h1>여행사를 위한 협업툴, TRIVIER</h1>
+          <p class="subtitle">창의적 기획과 문제 해결을 위한 최적의 솔루션</p>
+          <div class="stamp-box">
+            <div class="stamp">SYDNEY</div>
+            <div class="stamp">ROME</div>
+            <div class="stamp">PARIS</div>
+          </div>
+        </div>
+        <div class="intro-box">
+          <h3>프로젝트 개요</h3>
+          <ul>
+            <li><strong>제안 대상:</strong> 여행사 여행 상품 기획팀</li>
+            <li><strong>목적:</strong> 효율적인 협업 시스템 구축 및 창의적 아이디어 생성</li>
+            <li><strong>기대 효과:</strong> 협업 과정의 번거로움 감소 및 이익 추구</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="regional" class="page">
+        <div class="tab-header">
+          <button onclick="switchSubTab('cal-tab')" class="sub-tab-btn active">출장 캘린더</button>
+          <button onclick="switchSubTab('record-tab')" class="sub-tab-btn">여행 기록</button>
+          <button onclick="switchSubTab('route-tab')" class="sub-tab-btn">동선 최적화</button>
+        </div>
+
+        <div id="cal-tab" class="sub-content active">
+          <h3><i class="far fa-calendar-alt"></i> 2026년 1월 출장 일정</h3>
+          <div class="calendar-grid" id="calendar">
+          </div>
+        </div>
+
+        <div id="record-tab" class="sub-content">
+          <h3><i class="fas fa-camera"></i> 팀원 현장 답사 기록</h3>
+          <div class="feed-container">
+            <div class="feed-card">
+              <div class="user-info">
+                <div class="avatar" style="background: #d35400;">홍</div>
+                <span>지역 상품 기획팀 홍길동</span>
+              </div>
+              <div class="feed-img-placeholder">
+                <i class="fas fa-mountain"></i><br>답사 사진 (황대선사)
+              </div>
+              <div class="tags">
+                <span class="tag">#추천시간대_오후3시</span>
+                <span class="tag">#힐링</span>
+                <span class="tag">#등산</span>
+              </div>
+              <div class="actions">
+                <button onclick="toggleHeart(this)"><i class="far fa-heart"></i></button>
+                <button><i class="far fa-comment"></i></button>
+              </div>
+            </div>
+          </div>
+          <div class="input-area">
+            <input type="text" placeholder="새로운 기록이나 의견을 남기세요...">
+            <button>등록</button>
+          </div>
+        </div>
+
+        <div id="route-tab" class="sub-content">
+          <h3><i class="fas fa-route"></i> 투어 일정 회의 & 최적 동선</h3>
+          <div class="route-container">
+            <div class="spot-list">
+              <h4>장소 목록 (클릭하여 추가)</h4>
+              <div class="spot-item" onclick="addToRoute('황대선사', 100, '무료', 4.5)">
+                <strong>① 황대선사 (웡타이신 사원)</strong><br>
+                <small>소요: 100분 | 평점 4.5</small>
+              </div>
+              <div class="spot-item" onclick="addToRoute('구룡성채공원', 60, '무료', 4.0)">
+                <strong>② 구룡성채공원</strong><br>
+                <small>소요: 60분 | 평점 4.0</small>
+              </div>
+              <div class="spot-item" onclick="addToRoute('익청빌딩', 20, '무료', 3.8)">
+                <strong>③ 익청빌딩</strong><br>
+                <small>소요: 20분 | 포토스팟</small>
+              </div>
+              <div class="spot-item" onclick="addToRoute('원딤섬', 50, '2만원', 4.8)">
+                <strong>④ 원딤섬 (맛집)</strong><br>
+                <small>소요: 50분 | 미쉐린 맛집</small>
+              </div>
+            </div>
+            <div class="route-planner">
+              <h4>Day 2 일정표</h4>
+              <ul id="planned-route">
+                <li class="empty-msg">장소를 추가해주세요.</li>
+              </ul>
+              <div class="summary">
+                <p>총 소요 시간: <span id="total-time">0</span>분</p>
+                <button class="action-btn">최적 동선 추출</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="theme" class="page">
+        <div class="layout-grid-theme">
+          <div class="theme-card">
+            <h3>일상 공유 & 브레인스토밍</h3>
+            <div class="chat-keywords" id="keyword-container">
+              <span class="keyword">우산</span>
+              <span class="keyword">차수막</span>
+              <span class="keyword">스크린도어</span>
+              <span class="keyword">버스 알림 어플</span>
+            </div>
+            <div class="chat-input-box">
+              <input type="text" id="brainstorm-input" placeholder="키워드 입력...">
+              <button onclick="addKeyword()">추가</button>
+            </div>
+          </div>
+
+          <div class="theme-card">
+            <h3>오늘의 랜덤 질문</h3>
+            <div class="question-box">
+              <p id="random-q">질문을 생성해보세요!</p>
+              <button onclick="generateQuestion()" class="refresh-btn"><i class="fas fa-sync-alt"></i> 새 질문</button>
+            </div>
+            <div class="answer-area">
+              <input type="text" placeholder="답변을 입력하여 영감 얻기...">
+            </div>
+          </div>
+
+          <div class="theme-card full-width">
+            <h3>AI 액티비티/장소 추천</h3>
+            <div class="ai-box">
+              <div class="ai-input">
+                <input type="text" id="ai-keyword" placeholder="테마 키워드 입력 (예: 등산, 물, 힐링)">
+                <button onclick="getAIRecommendation()">AI 검색</button>
+              </div>
+              <div id="ai-result" class="ai-result">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="finalize" class="page">
+        <h2>최종 기획안 검토</h2>
+
+        <div class="info-dashboard">
+          <div class="info-card">
+            <h3><i class="fas fa-coins"></i> 환율 정보 (HKD/KRW)</h3>
+            <div class="rate-display">
+              <div class="flag">🇭🇰 1 HKD</div>
+              <div class="eq">=</div>
+              <div class="val">🇰🇷 189.09 KRW</div>
+            </div>
+          </div>
+          <div class="info-card">
+            <h3><i class="fas fa-cloud-sun"></i> 홍콩 주간 예보</h3>
+            <div class="weather-row">
+              <span>오늘</span> <i class="fas fa-sun" style="color:orange"></i> 17°/25°
+            </div>
+            <div class="weather-row">
+              <span>내일</span> <i class="fas fa-cloud-sun" style="color:gray"></i> 18°/28°
+            </div>
+            <div class="weather-row">
+              <span>모레</span> <i class="fas fa-cloud" style="color:skyblue"></i> 15°/26°
+            </div>
+          </div>
+          <div class="info-card">
+            <h3><i class="fas fa-passport"></i> 비자 정보</h3>
+            <ul>
+              <li>대한민국 여권 소지자 90일 무비자</li>
+              <li>여권 유효기간 6개월 이상 필수</li>
+              <li>별도 도착 비자 불필요</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="vote-section">
+          <h3>상품 기획안 투표</h3>
+          <p>이번 [홍콩 3박 4일 - 지역/테마 융합 상품] 기획안을 승인하시겠습니까?</p>
+          <div class="vote-buttons">
+            <button onclick="vote('yes')" class="vote-btn yes">YES (승인)</button>
+            <button onclick="vote('no')" class="vote-btn no">NO (보류)</button>
+          </div>
+          <div id="vote-result" class="vote-result"></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
