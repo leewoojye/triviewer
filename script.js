@@ -321,18 +321,15 @@ function createRoutePlanner(days) {
         const panel = document.createElement('div');
         panel.className = 'day-panel';
 
-        // placeholder cards inside panel
-        for (let k = 0; k < 3; k++) {
-            const pc = document.createElement('div');
-            pc.className = 'placeholder-card';
-            pc.innerText = '게시물 드래그 앤 드롭';
-            panel.appendChild(pc);
-        }
-
-        const hint = document.createElement('div');
-        hint.className = 'drop-hint';
-        hint.innerText = '여기에 게시물을 드래그하여 추가하세요.';
-        panel.appendChild(hint);
+        // single placeholder box that opens the add-post modal
+        const pc = document.createElement('div');
+        pc.className = 'placeholder-card';
+        pc.innerText = '게시물 추가';
+        pc.style.cursor = 'pointer';
+        pc.addEventListener('click', function() {
+            openAddPostModal(d);
+        });
+        panel.appendChild(pc);
 
         col.appendChild(tab);
         col.appendChild(panel);
@@ -344,6 +341,81 @@ function createRoutePlanner(days) {
     if (placeholder) placeholder.style.display = 'none';
     const resetBtn = document.getElementById('route-trip-reset');
     if (resetBtn) resetBtn.style.display = 'inline-block';
+}
+
+/* === Add-Post Modal: open/close and content population === */
+function openAddPostModal(day) {
+    const modal = document.getElementById('add-post-modal');
+    if (!modal) return;
+    const title = modal.querySelector('.add-post-title');
+    if (title) title.innerText = `${day}일차 - 기본 일정 및 동선 입력`;
+    // populate day label and clear fields
+    const dayLabel = document.getElementById('addpost-day');
+    if (dayLabel) dayLabel.innerText = `${day}일차`;
+    modal.dataset.day = day;
+    const inputs = ['addpost-time','addpost-duration','addpost-distance','addpost-cost','addpost-rating'];
+    inputs.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+    });
+    modal.style.display = 'flex';
+}
+
+function closeAddPostModal() {
+    const modal = document.getElementById('add-post-modal');
+    if (!modal) return;
+    modal.style.display = 'none';
+}
+
+function saveAddPost() {
+    const modal = document.getElementById('add-post-modal');
+    if (!modal) return;
+    const day = parseInt(modal.dataset.day, 10) || 1;
+    const time = document.getElementById('addpost-time').value || '';
+    const duration = document.getElementById('addpost-duration').value || '';
+    const distance = document.getElementById('addpost-distance').value || '';
+    const cost = document.getElementById('addpost-cost').value || '';
+    const rating = document.getElementById('addpost-rating').value || '';
+
+    // find the corresponding day panel
+    const columns = document.getElementById('route-day-columns');
+    if (!columns) return;
+    const col = columns.querySelector(`.day-column:nth-child(${day})`);
+    if (!col) return;
+    const panel = col.querySelector('.day-panel');
+    if (!panel) return;
+
+    // create post card
+    const post = document.createElement('div');
+    post.className = 'post-card';
+    const rows = [
+        ['시각', time],
+        ['예상 소요시간', duration],
+        ['다음 장소 이동', distance],
+        ['1인 예상 경비', cost],
+        ['팀원 평점', rating]
+    ];
+    rows.forEach(r => {
+        const pr = document.createElement('div');
+        pr.className = 'p-row';
+        const pl = document.createElement('div');
+        pl.className = 'p-label';
+        pl.innerText = r[0];
+        const pv = document.createElement('div');
+        pv.className = 'p-value';
+        pv.innerText = r[1] || '-';
+        pr.appendChild(pl);
+        pr.appendChild(pv);
+        post.appendChild(pr);
+    });
+
+    // insert before the placeholder box (keep placeholder below)
+    const placeholder = panel.querySelector('.placeholder-card');
+    if (placeholder) panel.insertBefore(post, placeholder);
+    else panel.appendChild(post);
+
+    // close modal
+    closeAddPostModal();
 }
 
 function resetRoutePlanner() {

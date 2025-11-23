@@ -239,6 +239,28 @@
       </div>
     </div>
   </div>
+
+  <!-- Add Post modal (opens when clicking '게시물 추가' in day panel) -->
+  <div id="add-post-modal" class="modal-overlay add-modal" style="display:none;">
+    <div class="add-post-content">
+      <button class="modal-close" onclick="closeAddPostModal()">✕</button>
+      <h3 class="add-post-title">기본 일정 및 동선 입력</h3>
+      <div class="add-post-body">
+        <div class="form-row"><span class="label oval">일차</span><span id="addpost-day" class="value">-</span></div>
+        <div class="form-row"><span class="label oval">시각</span><input id="addpost-time" class="value" type="time"></div>
+        <div class="form-row"><span class="label oval">예상 소요시간</span><input id="addpost-duration" class="value" type="text" placeholder="분 단위 입력 (예: 100)"></div>
+        <div class="form-row full"><span class="label oval">다음 장소와의 거리 및 이동 시간</span>
+          <textarea id="addpost-distance" class="value multi" rows="2" placeholder="예: 1.4km / 차량-6분, 대중교통-17분"></textarea>
+        </div>
+        <div class="form-row"><span class="label oval">1인 예상 경비</span><input id="addpost-cost" class="value" type="text" placeholder="예: 무료"></div>
+        <div class="form-row"><span class="label oval">팀원 평점</span><input id="addpost-rating" class="value" type="text" placeholder="예: 4.5/5"></div>
+        <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:8px;">
+          <button onclick="closeAddPostModal()" style="background:#fff; border:1px solid rgba(0,0,0,0.08); padding:8px 12px; border-radius:8px;">취소</button>
+          <button onclick="saveAddPost()" style="background:var(--primary-brown); color:#fff; border:none; padding:8px 12px; border-radius:8px;">저장</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>

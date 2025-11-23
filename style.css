@@ -378,6 +378,48 @@ body {
   border: 1px solid rgba(93,64,55,0.06);
 }
 
+/* Add-post modal specific styles */
+.add-modal .add-post-content {
+  width: 520px;
+  max-width: calc(100% - 40px);
+  background: #fff8f2;
+  border: 6px solid var(--primary-brown);
+  border-radius: 8px;
+  padding: 18px 20px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+  position: relative;
+}
+.add-post-content .modal-close {
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+.add-post-title {
+  text-align: center;
+  margin-bottom: 12px;
+  font-weight: 700;
+  color: var(--primary-brown);
+}
+.add-post-body { display:flex; flex-direction:column; gap:12px; }
+.form-row { display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid rgba(0,0,0,0.06); }
+.form-row.full { flex-direction:column; align-items:flex-start; }
+.label { width:140px; display:inline-block; }
+.label.oval { background:#fff3e0; color:var(--primary-brown); padding:8px 12px; border-radius:20px; font-weight:700; }
+.value { flex:1; color:#333; padding-left:6px; }
+.value.multi { white-space:normal; padding:10px 12px; }
+.add-post-body input.value, .add-post-body textarea.value { width:100%; padding:8px 10px; border-radius:8px; border:1px solid rgba(93,64,55,0.08); background:#fff; }
+
+/* placeholder-card styling (clickable) */
+.placeholder-card { display:flex; align-items:center; justify-content:center; background:#fffaf6; border:1px dashed rgba(93,64,55,0.08); padding:18px; border-radius:12px; color:var(--primary-brown); font-weight:700; }
+.post-card { background:#fff; border:1px solid rgba(93,64,55,0.08); padding:12px; border-radius:10px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); }
+.post-card .p-row { display:flex; gap:8px; padding:6px 0; align-items:center; }
+.post-card .p-row .p-label { width:140px; font-weight:700; color:var(--primary-brown); }
+.post-card .p-row .p-value { flex:1; color:#333; }
+
 /* Comments inside feed modal */
 .comment-list {
   display: flex;
