@@ -29,8 +29,11 @@ body {
 
 /* 앱 컨테이너 (다이어리 모양) */
 .app-container {
-  width: 1000px;
-  height: 700px;
+  /* expand to nearly full viewport while keeping a comfortable max size */
+  width: calc(100vw - 48px);
+  max-width: 1400px;
+  height: calc(100vh - 48px);
+  max-height: 960px;
   background-color: var(--bg-color);
   display: flex;
   border-radius: 15px;
@@ -81,7 +84,9 @@ body {
 
 /* 사이드바 */
 .sidebar {
-  width: 220px;
+  /* slightly wider sidebar to balance expanded content area */
+  width: 260px;
+  min-width: 220px;
   background-color: var(--primary-brown);
   color: white;
   padding: 20px;
@@ -356,7 +361,8 @@ body {
   z-index: 1200;
 }
 .modal-content {
-  width: 780px;
+  /* scale modal to match larger layout */
+  width: 900px;
   max-width: calc(100% - 40px);
   background: var(--bg-color);
   border: 6px solid var(--primary-brown);
