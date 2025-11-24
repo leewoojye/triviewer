@@ -1063,3 +1063,80 @@ button {
 .theme-card .chat-input-box button {
   flex: 0 0 auto; /* keep button natural size */
 }
+
+/* ===== Route tab: split white card into top/bottom panels ===== */
+/* Make only the route tab use inner white cards so other tabs keep existing styling */
+#route-tab {
+  background: transparent; /* allow inner boxes to be the visible white cards */
+  padding: 0; /* inner boxes provide padding */
+  border: none;
+  min-height: auto;
+}
+
+#route-tab .route-split { display:flex; flex-direction:column; gap:10px; margin-top:0; }
+
+#route-tab .route-top,
+#route-tab .route-bottom {
+  background: white;
+  border: 1px solid var(--light-brown);
+  padding: 18px;
+  box-shadow: 2px 6px 18px rgba(0,0,0,0.06);
+}
+
+#route-tab .route-top { border-radius: 8px 8px 0 0; }
+#route-tab .route-bottom { border-radius: 0 0 8px 8px; }
+
+/* Slightly reduce margin inside top so day-columns align visually */
+#route-tab .route-top .day-columns { margin-top: 8px; }
+
+/* Ensure the map fills the bottom card without extra top margin */
+#route-tab .route-bottom #route-map { margin-top: 0; height: 320px; }
+
+/* On small screens, keep comfortable spacing */
+@media (max-width: 900px) {
+  #route-tab .route-split { gap: 8px; }
+  #route-tab .route-top,
+  #route-tab .route-bottom { padding: 14px; }
+}
+
+/* ===== Split top into left/right and make left horizontally scrollable ===== */
+#route-tab .route-top-content {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+}
+
+#route-tab .route-left,
+#route-tab .route-right {
+  flex: 1 1 50%;
+}
+
+/* Left panel: holds day columns and placeholder; allow horizontal scroll when many day columns */
+#route-tab .route-left {
+  overflow-x: auto;
+  padding-bottom: 6px; /* allow space for scrollbar */
+}
+
+/* Keep day-columns as a single horizontal row that doesn't wrap */
+#route-tab .route-left .day-columns {
+  display: flex;
+  gap: 12px;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+}
+
+/* Ensure each day-column stays its min width so scrolling is necessary when many columns */
+.day-column { min-width: 200px; }
+
+/* Right panel: empty card for now, visually matches left side */
+#route-tab .route-right {
+  background: #fff7f2;
+  border: 1px dashed rgba(93,64,55,0.06);
+  border-radius: 6px;
+  min-height: 120px;
+}
+
+/* nicer scroll appearance on WebKit */
+#route-tab .route-left::-webkit-scrollbar { height: 10px; }
+#route-tab .route-left::-webkit-scrollbar-thumb { background: rgba(93,64,55,0.18); border-radius: 8px; }
+#route-tab .route-left::-webkit-scrollbar-track { background: transparent; }

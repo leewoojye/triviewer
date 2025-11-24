@@ -135,24 +135,39 @@
         </div>
 
         <div id="route-tab" class="sub-content">
-          <h3><i class="fas fa-route"></i> 투어 일정 회의</h3>
+          <div class="route-split">
+            <div class="route-top">
+              <h3><i class="fas fa-route"></i> 투어 일정 회의</h3>
 
-          <div class="trip-length-control">
-            <label>여행 기간 (일):</label>
-            <input type="number" id="route-trip-days" min="1" max="14" value="4">
-            <button id="route-trip-next">다음</button>
-            <button id="route-trip-reset" style="display:none;">초기화</button>
-          </div>
+              <div class="trip-length-control">
+                <label>여행 기간 (일):</label>
+                <input type="number" id="route-trip-days" min="1" max="14" value="4">
+                <button id="route-trip-next">다음</button>
+                <button id="route-trip-reset" style="display:none;">초기화</button>
+              </div>
 
-          <div id="route-day-planner" class="day-planner" style="display:none;">
-            <div id="route-day-columns" class="day-columns"></div>
-          </div>
+              <div class="route-top-content">
+                <div class="route-left">
+                  <div id="route-day-planner" class="day-planner" style="display:none;">
+                    <div id="route-day-columns" class="day-columns"></div>
+                  </div>
 
-          <div id="route-placeholder" class="route-placeholder">
-            <p>여행 기간을 선택하고 '다음'을 눌러 일차별 일정을 생성하세요.</p>
+                  <div id="route-placeholder" class="route-placeholder">
+                    <p>여행 기간을 선택하고 '다음'을 눌러 일차별 일정을 생성하세요.</p>
+                  </div>
+                </div>
+
+                <div class="route-right">
+                  <!-- 오른쪽 빈 박스 (추후 지도, 요약 등 배치 가능) -->
+                </div>
+              </div>
+            </div>
+
+            <div class="route-bottom">
+              <!-- Map for route/tour planning -->
+              <div id="route-map" class="route-map" aria-label="투어 지도" style="height:320px; display:none; margin-top:0;"></div>
+            </div>
           </div>
-          <!-- Map for route/tour planning -->
-          <div id="route-map" class="route-map" aria-label="투어 지도" style="height:320px; display:none; margin-top:12px;"></div>
         </div>
       </section>
 
