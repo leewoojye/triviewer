@@ -1092,6 +1092,45 @@ button {
 /* Ensure the map fills the bottom card without extra top margin */
 #route-tab .route-bottom #route-map { margin-top: 0; height: 320px; }
 
+/* Bottom split: map left, info right */
+.route-bottom-split {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+}
+.route-bottom-left { flex: 1 1 60%; }
+.route-bottom-right { flex: 1 1 40%; }
+
+.route-info-card {
+  background: #fffaf6;
+  border: 2px solid var(--light-brown);
+  border-radius: 8px;
+  padding: 12px;
+  height: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.route-icons { display:flex; gap:8px; align-items:center; }
+.route-icon { display:flex; align-items:center; gap:8px; background:#fff; padding:8px 10px; border-radius:10px; border:1px solid rgba(0,0,0,0.04); font-weight:700; color:var(--primary-brown); }
+.route-icon .star { color: gold; font-weight:900; }
+.route-icon .flag { color: green; }
+.route-icon .heart { color: #ff6b81; }
+
+.route-info-body { display:flex; gap:12px; flex:1; }
+.route-photo { width: 48%; background:#f3e9e4; border-radius:6px; display:flex; align-items:center; justify-content:center; color:#8d6e63; font-weight:700; border:1px solid rgba(0,0,0,0.06); }
+.route-summary { width: 52%; display:flex; flex-direction:column; gap:8px; }
+.route-summary h3 { margin:0; color:var(--primary-brown); }
+.route-address, .route-memo { margin:0; color:#4a2f27; font-size:14px; }
+
+.keyword-box { background:#f6efe9; border:1px solid rgba(93,64,55,0.06); padding:10px; border-radius:6px; height:100%; display:flex; flex-direction:column; }
+.keyword-box h4 { margin:0 0 8px 0; color:var(--primary-brown); }
+.keyword-list { flex:1; background:white; border:1px solid rgba(0,0,0,0.04); padding:8px; border-radius:6px; overflow:auto; }
+.keyword-list .kw { display:block; padding:6px 8px; border-bottom:1px dashed rgba(0,0,0,0.04); }
+
+.route-info-footer { text-align:center; }
+.route-info-footer .small-btn { padding:8px 12px; background:var(--primary-brown); color:#fff; border:none; border-radius:8px; cursor:pointer; font-weight:700; }
+
 /* On small screens, keep comfortable spacing */
 @media (max-width: 900px) {
   #route-tab .route-split { gap: 8px; }

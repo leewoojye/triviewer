@@ -173,8 +173,47 @@
             </div>
 
             <div class="route-bottom">
-              <!-- Map for route/tour planning -->
-              <div id="route-map" class="route-map" aria-label="투어 지도" style="height:320px; display:none; margin-top:0;"></div>
+              <!-- Split bottom: left = map, right = route info / place details -->
+              <div class="route-bottom-split">
+                <div class="route-bottom-left">
+                  <div id="route-map" class="route-map" aria-label="투어 지도" style="height:320px; display:none; margin-top:0;"></div>
+                </div>
+
+                <div class="route-bottom-right" id="route-info-panel" style="display:none;">
+                  <div class="route-info-card">
+                    <div class="route-info-top">
+                      <div class="route-icons">
+                        <div class="route-icon"><span class="star">★</span> 활동 일정</div>
+                        <div class="route-icon"><span class="flag">▶</span> 식사 일정</div>
+                        <div class="route-icon"><span class="heart">♡</span> 숙박</div>
+                      </div>
+                    </div>
+
+                    <div class="route-info-body">
+                      <div class="route-photo" id="route-info-photo">사진</div>
+
+                      <div class="route-summary">
+                        <h3 id="route-info-title">장소명</h3>
+                        <p class="route-address" id="route-info-address">주소: -</p>
+                        <p class="route-memo" id="route-info-memo">메모: -</p>
+                      </div>
+
+                      <div class="route-right-side">
+                        <div class="keyword-box">
+                          <h4>키워드 기록창</h4>
+                          <div class="keyword-list" id="route-info-keywords">
+                            <!-- keywords go here -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="route-info-footer">
+                      <button id="route-info-open-feed" class="small-btn">팀원 기록 보기</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

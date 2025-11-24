@@ -327,6 +327,10 @@ function createMiniFeedCard(item, date) {
 
     card.appendChild(thumb);
     card.appendChild(body);
+    // clicking the mini card will populate the route info panel
+    card.addEventListener('click', function() {
+        try { populateRouteInfo(item); } catch (e) {}
+    });
     return card;
 }
 
@@ -395,7 +399,42 @@ function createInspectionCard(item, date) {
     card.appendChild(thumb);
     card.appendChild(body);
 
+    // clicking the inspection card will populate the route info panel
+    card.addEventListener('click', function() {
+        try { populateRouteInfo(item); } catch (e) {}
+    });
+
     return card;
+}
+
+// Populate the right-side route info panel with details from an item
+function populateRouteInfo(item) {
+    const panel = document.getElementById('route-info-panel');
+    if (!panel) return;
+    // show panel (if hidden)
+    panel.style.display = 'block';
+
+    const title = document.getElementById('route-info-title');
+    const address = document.getElementById('route-info-address');
+    const memo = document.getElementById('route-info-memo');
+    const photo = document.getElementById('route-info-photo');
+    const keywords = document.getElementById('route-info-keywords');
+
+    if (title) title.innerText = item.user || '장소명';
+    if (address) address.innerText = item.address || '주소: 정보 없음';
+    if (memo) memo.innerText = item.memo || (item.tags ? item.tags.join(' ') : '메모 없음');
+    if (photo) photo.innerText = item.imageLabel || '사진';
+
+    // keywords
+    if (keywords) {
+        keywords.innerHTML = '';
+        (item.tags || []).forEach(t => {
+            const d = document.createElement('div');
+            d.className = 'kw';
+            d.innerText = t;
+            keywords.appendChild(d);
+        });
+    }
 }
 
 function openFeedModal(date) {
@@ -483,6 +522,15 @@ function createRoutePlanner(days) {
             insp.style.display = 'flex';
             // populate with all available (sample) items by default
             try { renderInspectionPanel(); } catch (e) {}
+        }
+        // also show route info panel on planner creation
+        const routeInfo = document.getElementById('route-info-panel');
+        if (routeInfo) {
+            routeInfo.style.display = 'block';
+            try {
+                const sample = getAllFeedItems()[0];
+                if (sample) populateRouteInfo(sample);
+            } catch (e) {}
         }
     } catch (e) {}
     const placeholder = document.getElementById('route-placeholder');
@@ -641,6 +689,16 @@ document.addEventListener('DOMContentLoaded', function() {
     if (reset) {
         reset.addEventListener('click', function() {
             resetRoutePlanner();
+        });
+    }
+
+    // wire up route info footer button to open feed modal for last selected date
+    const routeInfoBtn = document.getElementById('route-info-open-feed');
+    if (routeInfoBtn) {
+        routeInfoBtn.addEventListener('click', function() {
+            const d = window._lastSelectedInspectionDate || null;
+            if (d) openFeedModal(d);
+            else alert('먼저 캘린더에서 날짜를 선택하거나 항목을 클릭하세요.');
         });
     }
 });
