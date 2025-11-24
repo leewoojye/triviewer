@@ -1136,6 +1136,76 @@ button {
   min-height: 120px;
 }
 
+/* 현장답사기록 (오른쪽 패널) */
+.inspection-panel {
+  background: #fff7f2;
+  border-radius: 8px;
+  padding: 14px;
+  height: 100%;
+  display: none; /* hidden until planner is created */
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid rgba(93,64,55,0.04);
+}
+.inspection-header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+}
+.inspection-header h4 {
+  margin:0;
+  color: var(--primary-brown);
+  font-size: 16px;
+  font-weight: 800;
+}
+.inspection-actions .small-btn {
+  padding:6px 10px;
+  border-radius:8px;
+  background: var(--primary-brown);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-weight:700;
+}
+.inspection-list {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  padding-right:6px;
+}
+.inspection-empty {
+  color: rgba(93,64,55,0.5);
+  font-weight:700;
+}
+.mini-feed-card {
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  background: #fffaf6;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid rgba(93,64,55,0.06);
+}
+.mini-feed-card .m-thumb {
+  width: 120px;
+  height: 70px;
+  background:#f0e6e2;
+  border-radius:6px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color: #8d6e63;
+  font-weight:700;
+}
+.mini-feed-card .m-body { flex:1; display:flex; flex-direction:column; gap:6px; }
+.m-user { font-weight:700; color:var(--primary-brown); font-size:13px; }
+.m-tags { font-size:12px; color:#b35400; }
+.m-actions { display:flex; gap:6px; justify-content:flex-end; margin-top:auto; }
+.m-actions button { padding:6px 10px; border-radius:8px; background:var(--secondary-brown); color:#fff; border:none; cursor:pointer; font-weight:700; }
+
 /* nicer scroll appearance on WebKit */
 #route-tab .route-left::-webkit-scrollbar { height: 10px; }
 #route-tab .route-left::-webkit-scrollbar-thumb { background: rgba(93,64,55,0.18); border-radius: 8px; }

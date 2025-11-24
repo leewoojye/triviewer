@@ -115,7 +115,11 @@ for (let i = 1; i <= 31; i++) {
     cell.style.cursor = 'pointer';
     cell.dataset.date = i;
     cell.addEventListener('click', function() {
+        // open the full popup and also populate the right-side inspection panel
         openFeedModal(i);
+        try { renderInspectionPanel(i); } catch (e) {}
+        // remember last selected date for inspection panel actions
+        window._lastSelectedInspectionDate = i;
     });
 
     calendarGrid.appendChild(cell);
@@ -274,12 +278,124 @@ function createFeedCard(item) {
 }
 
 function renderFeedCardsForDate(date) {
-    // For now, create sample items. In real app, fetch data for the date.
-    const items = [
+    // Use a centralized data provider so both modal and right-panel can share same items
+    const items = getFeedItemsForDate(date);
+    return items.map(i => createFeedCard(i));
+}
+
+// Small helper returning sample feed items for a given date
+function getFeedItemsForDate(date) {
+    // In the real app replace this with a data fetch/filter by date
+    return [
         { avatarText: '홍', user: '지역 상품 기획팀 홍길동', imageLabel: '답사 사진 (황대선사)', tags: ['#추천시간대_오후3시', '#힐링', '#등산'], avatarColor: '#d35400' },
         { avatarText: '김', user: '지역 팀 김철수', imageLabel: '현장 스냅 (구룡공원)', tags: ['#포토스팟', '#가벼운산책'], avatarColor: '#6a1b9a' }
     ];
-    return items.map(i => createFeedCard(i));
+}
+
+// Create a compact mini card for the right-side inspection panel
+function createMiniFeedCard(item, date) {
+    const card = document.createElement('div');
+    card.className = 'mini-feed-card';
+
+    const thumb = document.createElement('div');
+    thumb.className = 'm-thumb';
+    thumb.innerText = item.imageLabel || '사진';
+
+    const body = document.createElement('div');
+    body.className = 'm-body';
+
+    const user = document.createElement('div');
+    user.className = 'm-user';
+    user.innerText = item.user || '팀원';
+
+    const tags = document.createElement('div');
+    tags.className = 'm-tags';
+    tags.innerText = (item.tags || []).slice(0, 3).join(' ');
+
+    const actions = document.createElement('div');
+    actions.className = 'm-actions';
+    const detailBtn = document.createElement('button');
+    detailBtn.innerText = '자세히';
+    detailBtn.addEventListener('click', function() {
+        openFeedModal(date);
+    });
+    actions.appendChild(detailBtn);
+
+    body.appendChild(user);
+    body.appendChild(tags);
+    body.appendChild(actions);
+
+    card.appendChild(thumb);
+    card.appendChild(body);
+    return card;
+}
+
+// Populate the right-side inspection panel with mini cards for the selected date
+function renderInspectionPanel(date) {
+    const list = document.getElementById('inspection-list');
+    if (!list) return;
+    list.innerHTML = '';
+    // If no specific date provided, show all available items (any date)
+    const items = (typeof date === 'undefined' || date === null) ? getAllFeedItems() : getFeedItemsForDate(date);
+    if (!items || items.length === 0) {
+        const p = document.createElement('p');
+        p.className = 'inspection-empty';
+        p.innerText = '해당 날짜의 답사 기록이 없습니다.';
+        list.appendChild(p);
+        return;
+    }
+
+    // Render condensed full items directly in the panel (no separate '팝업 보기' required)
+    items.forEach(it => {
+        const ic = createInspectionCard(it, date);
+        list.appendChild(ic);
+    });
+}
+
+// Return all items regardless of date (sample provider)
+function getAllFeedItems() {
+    // Could be replaced with an API call or combined dataset
+    return [
+        { avatarText: '홍', user: '지역 상품 기획팀 홍길동', imageLabel: '답사 사진 (황대선사)', tags: ['#추천시간대_오후3시', '#힐링', '#등산'], avatarColor: '#d35400', comments: ['좋아요','다음번에 다시가요'] },
+        { avatarText: '김', user: '지역 팀 김철수', imageLabel: '현장 스냅 (구룡공원)', tags: ['#포토스팟', '#가벼운산책'], avatarColor: '#6a1b9a', comments: [] }
+    ];
+}
+
+// Create a fuller inspection card displayed directly in the right panel
+function createInspectionCard(item, date) {
+    const card = document.createElement('div');
+    card.className = 'mini-feed-card';
+
+    const thumb = document.createElement('div');
+    thumb.className = 'm-thumb';
+    thumb.innerText = item.imageLabel || '사진';
+
+    const body = document.createElement('div');
+    body.className = 'm-body';
+
+    const user = document.createElement('div');
+    user.className = 'm-user';
+    user.innerText = item.user || '팀원';
+
+    const tags = document.createElement('div');
+    tags.className = 'm-tags';
+    tags.innerText = (item.tags || []).join(' ');
+
+    // small excerpt / comments preview
+    const preview = document.createElement('div');
+    preview.style.fontSize = '13px';
+    preview.style.color = '#5e3b31';
+    preview.style.marginTop = '6px';
+    preview.innerText = (item.comments && item.comments[0]) ? item.comments[0] : '';
+
+    body.appendChild(user);
+    body.appendChild(tags);
+    body.appendChild(preview);
+
+    card.appendChild(thumb);
+    card.appendChild(body);
+
+    return card;
 }
 
 function openFeedModal(date) {
@@ -360,6 +476,15 @@ function createRoutePlanner(days) {
     }
 
     planner.style.display = 'block';
+    // Show the inspection panel once the planner is created
+    try {
+        const insp = document.getElementById('site-inspection-panel');
+        if (insp) {
+            insp.style.display = 'flex';
+            // populate with all available (sample) items by default
+            try { renderInspectionPanel(); } catch (e) {}
+        }
+    } catch (e) {}
     const placeholder = document.getElementById('route-placeholder');
     if (placeholder) placeholder.style.display = 'none';
     const resetBtn = document.getElementById('route-trip-reset');
@@ -457,6 +582,8 @@ function saveAddPost() {
 function resetRoutePlanner() {
     const planner = document.getElementById('route-day-planner');
     planner.style.display = 'none';
+    // hide the inspection panel when planner reset
+    try { const insp = document.getElementById('site-inspection-panel'); if (insp) insp.style.display = 'none'; } catch (e) {}
     const placeholder = document.getElementById('route-placeholder');
     if (placeholder) placeholder.style.display = 'block';
     const resetBtn = document.getElementById('route-trip-reset');
@@ -770,3 +897,5 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// (inspection panel is intentionally not rendered on page load)
