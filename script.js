@@ -27,6 +27,20 @@ function switchSubTab(tabId) {
         btn.classList.remove('active');
     });
     event.currentTarget.classList.add('active');
+
+    // Special handling for route-tab: if planner not created yet, ensure map remains hidden
+    try {
+        if (tabId === 'route-tab') {
+            const planner = document.getElementById('route-day-planner');
+            const mapEl = document.getElementById('route-map');
+            if (planner && mapEl) {
+                const plannerVisible = planner.style.display && planner.style.display !== 'none';
+                if (!plannerVisible) {
+                    mapEl.style.display = 'none';
+                }
+            }
+        }
+    } catch (e) {}
 }
 
 /* === 9. 주제소통 / 일상소통 탭 전환 로직 === */
@@ -447,6 +461,18 @@ function resetRoutePlanner() {
     if (placeholder) placeholder.style.display = 'block';
     const resetBtn = document.getElementById('route-trip-reset');
     if (resetBtn) resetBtn.style.display = 'none';
+    // hide and remove map instance if present
+    const mapEl = document.getElementById('route-map');
+    if (mapEl) {
+        try {
+            if (mapEl._leaflet_map) {
+                mapEl._leaflet_map.remove();
+            }
+        } catch (e) {}
+        mapEl._leaflet_initialized = false;
+        mapEl._leaflet_map = null;
+        mapEl.style.display = 'none';
+    }
 }
 
 /* === Map initialization for route/투어 일정 === */
